@@ -3,4 +3,8 @@ name = "designPattern"
 version = "0.1.0"
 edition = "2024"
 
+[[bin]]
+name = "creational"
+path = "src/bin/creational/main.rs"
+
 [dependencies]
