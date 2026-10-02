@@ -8,3 +8,7 @@ name = "creational"
 path = "src/bin/creational/main.rs"
 
 [dependencies]
+
+[dependencies.reqwest]
+version = "0.13.5"
+features = ["json", "query"]

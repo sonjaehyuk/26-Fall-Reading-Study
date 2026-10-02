@@ -6,4 +6,5 @@ mod singleton;
 
 fn main() {
     abstractFactory::main();
+    builder::main();
 }
