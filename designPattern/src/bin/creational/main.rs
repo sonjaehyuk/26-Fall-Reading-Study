@@ -8,4 +8,5 @@ fn main() {
     abstractFactory::main();
     builder::main();
     factoryMethod::main();
+    prototype::main();
 }
