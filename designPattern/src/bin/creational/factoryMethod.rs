@@ -40,10 +40,9 @@ impl Notification for PushNotification {
     }
 }
 
-
 trait NotificationCreator {
     /// 팩토리 메서드: 어떤 제품을 만들지는 구현체가 결정
-    fn create_notification(&self) -> Box<dyn Notification>;
+    fn create_notification(&self) -> impl Notification;
 
     /// 템플릿 메서드: 생성 로직을 포함한 공통 비즈니스 로직
     fn notify_user(&self, message: &str) {
@@ -53,25 +52,40 @@ trait NotificationCreator {
     }
 }
 
-
 struct EmailCreator;
 impl NotificationCreator for EmailCreator {
-    fn create_notification(&self) -> Box<dyn Notification> {
-        Box::new(EmailNotification)
+    fn create_notification(&self) -> impl Notification {
+        EmailNotification {}
     }
 }
 
 struct SmsCreator;
 impl NotificationCreator for SmsCreator {
-    fn create_notification(&self) -> Box<dyn Notification> {
-        Box::new(SmsNotification)
+    fn create_notification(&self) -> impl Notification {
+        SmsNotification {}
     }
 }
 
 struct PushCreator;
 impl NotificationCreator for PushCreator {
-    fn create_notification(&self) -> Box<dyn Notification> {
-        Box::new(PushNotification)
+    fn create_notification(&self) -> impl Notification {
+        PushNotification {}
+    }
+}
+
+enum CreatorList {
+    EmailCreator(EmailCreator),
+    SmsCreator(SmsCreator),
+    PushCreator(PushCreator),
+}
+
+impl CreatorList {
+    fn notify_user(&self, message: &str) {
+        match self {
+            CreatorList::EmailCreator(creator) => creator.notify_user(message),
+            CreatorList::SmsCreator(creator) => creator.notify_user(message),
+            CreatorList::PushCreator(creator) => creator.notify_user(message),
+        }
     }
 }
 
@@ -80,10 +94,11 @@ pub fn main() {
     let mut input = String::new();
     std::io::stdin().read_line(&mut input).expect("입력 실패");
 
-    let creator: Box<dyn NotificationCreator> = match input.trim().to_lowercase().as_str() {
-        "sms" => Box::new(SmsCreator),
-        "push" => Box::new(PushCreator),
-        _ => Box::new(EmailCreator),
+    let creator: CreatorList = match input.trim().to_lowercase().as_str() {
+        "sms" => CreatorList::SmsCreator(SmsCreator {}),
+        "push" => CreatorList::PushCreator(PushCreator {}),
+        "email" => CreatorList::EmailCreator(EmailCreator {}),
+        _ => panic!("유효하지 않은 입력"),
     };
 
     // 사용자는 어떤 채널인지 몰라도 됨
