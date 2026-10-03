@@ -9,4 +9,5 @@ fn main() {
     builder::main();
     factoryMethod::main();
     prototype::main();
+    singleton::main();
 }
