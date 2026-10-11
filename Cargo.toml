@@ -1,5 +1,5 @@
 [workspace]
-members = ["designPattern"]
+members = ["designPattern", "structuralPattern"]
 resolver = "3"
 
 [workspace.package]
